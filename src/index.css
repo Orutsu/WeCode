@@ -2,7 +2,6 @@ html, body, .Login-component {
   height: 100%;
   display: flex;
   flex: 1;
-  background-color: aquamarine;
 }
 
 body {
