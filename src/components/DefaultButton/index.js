@@ -1,8 +1,8 @@
 import React from "react";
+import './style.css'
 
 const DefaultButton = ({ 
     value,
-    children,
     onClick, 
     style,
   }) => { 
@@ -25,12 +25,5 @@ const DefaultButton = ({
     </button>
   );
 }
-// color="#AECAE4"
-// height = "52px"
-// onClick={() => console.log("You clicked on the pink circle!")}
-// radius = "8px"
-// width = "100%"
-// children = "Login"
-// style={{marginTop: 35}}
 
 export default DefaultButton;

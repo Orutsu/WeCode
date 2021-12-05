@@ -20,11 +20,11 @@ code {
 }
 
 @font-face {
-  font-family: 'Quando';
-  src: local('Quando'), url(./assets/fonts/Quando-Regular.ttf) format('truetype');
+  font-family: 'Roboto';
+  src: local('Roboto'), url(./assets/fonts/Roboto-Regular.ttf) format('truetype');
 }
 
 @font-face {
-  font-family: 'Roboto';
-  src: local('Roboto'), url(./assets/fonts/Roboto-Regular.ttf) format('truetype');
+  font-family: 'Quando';
+  src: local('Quando'), url(./assets/fonts/Quando-Regular.ttf) format('truetype');
 }
