@@ -3,7 +3,7 @@ import './style.css'
 
 const HeaderText = ({children, fontSize, style}) => {
     return (
-       <p style={{fontSize: fontSize, ...style}} className="headerText" >{children}</p>
+       <p className="headerText" style={{fontSize: fontSize, ...style}} >{children}</p>
     );  
 }
 

@@ -5,3 +5,21 @@
     flex: 1;
     flex-direction: column;
 }
+
+.ModuleCard {
+    color: inherit;
+    text-decoration: inherit;
+    display: flex;
+    background-color: #EDE7D7;
+    padding-top: 45px;
+    width: 379px;
+    height: 203px;
+    flex-direction: column;
+    
+    border-radius: 16px;
+    box-shadow: 0 3px 10px rgb(0 0 0 / 0.2);
+}
+
+.disabled-link {
+  pointer-events: none;
+}
