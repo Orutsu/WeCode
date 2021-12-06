@@ -16,7 +16,7 @@
     font-weight: 400;
     line-height: normal;
     background-color: transparent;
-    color: #c4c4c4;
+    color: black;
     outline: none;
     transition: 0.3s background-color ease-in-out, 0.3s box-shadow ease-in-out, 0.1s padding ease-in-out;
     -webkit-appearance: none;
