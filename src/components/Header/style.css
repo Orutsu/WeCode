@@ -1,0 +1,24 @@
+.header {
+    width: 100%;
+    height: 101;
+    background-color: #AECAE4;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    margin: 0;
+}
+
+.profileLogo {
+    margin-right: 20;
+}
+
+.headerLink {
+    color: inherit;
+    text-decoration: inherit;
+}
+
+.headerLink:focus, .headerLink:hover,.headerLink:visited, .headerLink:link, .headerLink:active {
+    color: inherit;
+    text-decoration: inherit;
+}

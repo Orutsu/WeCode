@@ -4,14 +4,14 @@ import Header from "../../components/Header";
 import './style.css';
 
 
-const ModuleSelectionScreen = () => {
+const UserCabinetScreen = () => {
     return (
-        <div className="ModuleSelectionContainer">
+        <div className="UserCabinetContainer">
             <Header />
-            <DefaultText>ModuleSelectionScreen заглушка</DefaultText>
+            <DefaultText>UserCabinetScreen заглушка</DefaultText>
         </div>
     );  
 }
 
-export default ModuleSelectionScreen
+export default UserCabinetScreen
   
