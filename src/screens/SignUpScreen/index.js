@@ -5,10 +5,14 @@ import DefaultInput from '../../components/DefaultInput'
 import DefaultButton from '../../components/DefaultButton'
 import {
     Link,
+    useNavigate
   } from "react-router-dom";
 import DefaultText from "../../components/DefaultText"
 import { useTypedSelector } from "../../redux/store.ts";
 import { signUp, getUsers} from "../../services/UserService";
+import {useDispatch} from 'react-redux'
+import { setIsAuth, setUser } from "../../redux/auth";
+
 
 
 const SignUpScreen = () => {
@@ -17,7 +21,22 @@ const SignUpScreen = () => {
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
     const { isAuth, user } = useTypedSelector((store) => store.auth)
-    console.log('isUser', user, isAuth)
+    const dispatch = useDispatch()
+    const navigate = useNavigate()
+
+    const onSignUp = async () => {
+        try{
+            const userInfo = await signUp(1, name, surname, email, password);
+            dispatch(setIsAuth(true))
+            dispatch(setUser(userInfo))
+            navigate('/moduleselection', { replace: true })
+
+        }catch(ex)
+        {
+            dispatch(setIsAuth(false))
+            alert('Sign up failed ', ex);
+        }
+    }
     
     return (
         <div className="SignUpContainer">
@@ -28,7 +47,7 @@ const SignUpScreen = () => {
                <DefaultInput value={email} placeholder="Email" onChange={(text) => setEmail(text)} style={{marginTop: 16}}/>
                <DefaultInput value={password} placeholder="Password" type="password" onChange={(text) => setPassword(text)} style={{marginTop: 16}}/>
                <DefaultButton border="none"    
-                    onClick={() => {signUp(1, name, surname, email, "15.02.2001", password); console.log("Create Account!")}}
+                    onClick={onSignUp}
                     value="Create Account"
                     style={{marginTop: 16}}
                 />
