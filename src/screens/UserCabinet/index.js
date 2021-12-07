@@ -6,9 +6,13 @@ import HeaderText from "../../components/HeaderText";
 import DefaultText from "../../components/DefaultText";
 import DefaultInput from '../../components/DefaultInput'
 import DefaultButton from '../../components/DefaultButton'
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import { useDispatch } from "react-redux";
+import { resetAuthState } from "../../redux/auth";
 
 const UserCabinetScreen = ({isAdmin = false}) => {
+    const navigate = useNavigate();
+    const dispatch = useDispatch()
     const [name, setName] = useState('Lan')
     const [surname, setSurname] = useState('Fan')
     const [email, setEmail] = useState('LanFan@gmail.com')
@@ -23,7 +27,11 @@ const UserCabinetScreen = ({isAdmin = false}) => {
     const successfullyCompletedTasksAmount = 2;
     const averageMark = "70%";
 
-    
+    const onSignOut = () => {
+        dispatch(resetAuthState())
+        navigate('/signin', { replace: true })
+    }
+
     const createdTasks = [
         {name:"Loops", description:"Practice your skills in obtaining requirements", complexity : "3"},
         {name:"If statement", description:"Practice your skills in creating user friendly design", complexity : "4"},
@@ -72,6 +80,11 @@ const UserCabinetScreen = ({isAdmin = false}) => {
                     <DefaultButton border="none"    
                         onClick={() => console.log("Change password")}
                         value="Change password"
+                        style={{marginTop: 20}}
+                    />
+                    <DefaultButton border="none"    
+                        onClick={onSignOut}
+                        value="Sign out"
                         style={{marginTop: 20}}
                     />
                 </div>
