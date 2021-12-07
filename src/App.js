@@ -36,7 +36,7 @@ export default function App() {
 }
 
 function RedirectingHandler() {
-  const isAuth = true; 
+  const isAuth = false; 
   if (isAuth) {
     return <Navigate to="/moduleselection" />;
   } else {

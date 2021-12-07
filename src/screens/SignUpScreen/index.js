@@ -7,6 +7,7 @@ import {
     Link,
   } from "react-router-dom";
 import DefaultText from "../../components/DefaultText"
+import { signUp, getUsers} from "../../services/UserService";
 
 
 const SignUpScreen = () => {
@@ -24,7 +25,7 @@ const SignUpScreen = () => {
                <DefaultInput value={email} placeholder="Email" onChange={(text) => setEmail(text)} style={{marginTop: 16}}/>
                <DefaultInput value={password} placeholder="Password" type="password" onChange={(text) => setPassword(text)} style={{marginTop: 16}}/>
                <DefaultButton border="none"    
-                    onClick={() => console.log("Create Account!")}
+                    onClick={() => {signUp(1, name, surname, email, "15.02.2001", password); console.log("Create Account!")}}
                     value="Create Account"
                     style={{marginTop: 16}}
                 />
