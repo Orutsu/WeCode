@@ -3,24 +3,39 @@ import DefaultText from "../../components/DefaultText";
 import Header from "../../components/Header";
 import './style.css';
 import HeaderText from "../../components/HeaderText";
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { FaPlusSquare } from 'react-icons/fa';
 
-const TasksListScreen = ({isAdmin = false}) => { 
-    const TaskCard = ({name, description, complexity, score}) => {
+const TasksListScreen = ({isAdmin = true}) => { 
+    const navigate = useNavigate()
+
+    const onTaskCardClick = (taskId) => {
+        if (!isAdmin) {
+            navigate('/completingtask', { replace: false })
+        } else {
+            navigate('/createtask', { replace: false })
+        }
+    }
+
+    const onEditTaskClick = (e) => {
+        e.stopPropagation();
+        console.log('Edit') 
+    }
+    
+    const TaskCard = ({id, name, description, complexity, score}) => {
         let descriptionWidth = isAdmin? "65%" : "50%";
         return (
-            <Link className="TaskCard " to= '/completingtask' style={{padding: 20, paddingTop: 30, marginBottom: 20}}>          
+            <div className="TaskCard" onClick={() => onTaskCardClick(id)} style={{padding: 20, paddingTop: 30, marginBottom: 20}}>          
                 <HeaderText fontSize={36} style={{paddingRight: 20, width: "25%", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis"}}>{name}</HeaderText>
                 <DefaultText fontSize={18} style={{paddingRight: 50, paddingTop: 15, width: descriptionWidth,  whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis"}}>{description}</DefaultText>
                 {isAdmin 
-                    ? <HeaderText fontSize={18} style={{paddingTop: 15}}>Edit</HeaderText> // How to press something in link??? Move edit somewhere outside link
+                    ? <div onClick={onEditTaskClick}><HeaderText fontSize={18} style={{paddingTop: 15}} >Edit</HeaderText></div> // How to press something in link??? Move edit somewhere outside link
                     : <DefaultText fontSize={18} style={{paddingTop: 15}}>Complexity: {complexity}</DefaultText>
                 }
                 {!isAdmin && 
                     <DefaultText fontSize={18} style={{paddingLeft: 25, paddingTop: 15}}>Score: {score}</DefaultText>
                 }
-            </Link>
+            </div>
         )
     }
 
@@ -32,7 +47,7 @@ const TasksListScreen = ({isAdmin = false}) => {
         {name:"node modules", description:"Practice your skills in testing the system. Learn more about testing approaches", complexity : "3", score: "20%"}
     ]
 
-    const listItems = tasks.map((task) => <TaskCard  isAdmin name={task.name}  description={task.description} complexity={task.complexity} score={task.score}/>);
+    const listItems = tasks.map((task, index) => <TaskCard id={index} isAdmin name={task.name}  description={task.description} complexity={task.complexity} score={task.score}/>);
 
     return (
         <div className="TasksListContainer">
