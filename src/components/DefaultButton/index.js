@@ -11,6 +11,7 @@ const DefaultButton = ({
       className="button"
       onClick={onClick}
       style={{
+         userSelect: "none",
          backgroundColor: "#AECAE4",
          borderRadius: '8px',
          border: 'none',
