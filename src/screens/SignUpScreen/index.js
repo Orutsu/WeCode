@@ -7,14 +7,16 @@ import {
     Link,
   } from "react-router-dom";
 import DefaultText from "../../components/DefaultText"
-
+import { useTypedSelector } from "../../redux/store.ts";
 
 const SignUpScreen = () => {
     const [name, setName] = useState('')
     const [surname, setSurname] = useState('')
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
-
+    const { isAuth, user } = useTypedSelector((store) => store.auth)
+    console.log('isUser', user, isAuth)
+    
     return (
         <div className="SignUpContainer">
             <div className="centerBox">

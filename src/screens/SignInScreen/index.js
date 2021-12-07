@@ -7,11 +7,14 @@ import {
     Link,
   } from "react-router-dom";
 import DefaultText from "../../components/DefaultText"
-
+import {useDispatch} from 'react-redux'
+import { setIsAuth } from "../../redux/auth";
 
 const SignInScreen = () => {
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
+    const dispatch = useDispatch()
+
 
     return (
         <div className="SignInContainer">
@@ -20,7 +23,7 @@ const SignInScreen = () => {
                <DefaultInput value={email} placeholder="Email" onChange={(text) => setEmail(text)} style={{marginTop: 117}}/>
                <DefaultInput value={password} placeholder="Password" type="password" onChange={(text) => setPassword(text)} style={{marginTop: 35}}/>
                <DefaultButton border="none"    
-                    onClick={() => console.log("login!")}
+                    onClick={() => dispatch(setIsAuth(true))}
                     value="Login"
                     style={{marginTop: 35}}
                 />

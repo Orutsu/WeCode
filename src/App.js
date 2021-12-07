@@ -11,8 +11,10 @@ import ModuleSelectionScreen from "./screens/ModuleSelectionScreen";
 import TasksListScreen from "./screens/TasksList";
 import UserCabinetScreen from "./screens/UserCabinet";
 import WebFont from 'webfontloader';
+import { useTypedSelector } from "./redux/store";
 
 export default function App() {
+  const { isAuth, user } = useTypedSelector((store) => store.auth)
   useEffect(() => {
     WebFont.load({
       google: {
@@ -20,7 +22,7 @@ export default function App() {
       }
     });
    }, []);
-  
+  console.log('isUser',user, isAuth)
   return (
     <Router>
         <Routes>
@@ -36,7 +38,8 @@ export default function App() {
 }
 
 function RedirectingHandler() {
-  const isAuth = true; 
+  const { isAuth } = useTypedSelector((store) => store.auth)
+
   if (isAuth) {
     return <Navigate to="/moduleselection" />;
   } else {

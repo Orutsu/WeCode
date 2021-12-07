@@ -9,8 +9,6 @@ import DefaultButton from '../../components/DefaultButton'
 import { Link } from 'react-router-dom';
 
 const UserCabinetScreen = ({isAdmin = false}) => {
-
-    
     const [name, setName] = useState('Lan')
     const [surname, setSurname] = useState('Fan')
     const [email, setEmail] = useState('LanFan@gmail.com')
@@ -40,7 +38,6 @@ const UserCabinetScreen = ({isAdmin = false}) => {
             <Link className="CompletedTask"  to= '/completingtask' style={{padding: 10, marginBottom: 20}}>          
                 <HeaderText fontSize={28} style={{paddingRight: 20, width: "70%", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis"}}>{name}</HeaderText>
                 <DefaultText fontSize={18} style={{paddingTop: 10}}>Score: {score}</DefaultText>
-
             </Link>
         )
     };
