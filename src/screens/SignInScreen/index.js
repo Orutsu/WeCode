@@ -21,13 +21,15 @@ const SignInScreen = () => {
     const onSignIn = async () => {
         try{
             const userInfo = await signIn(email, password);
+            console.log('userInfo', userInfo);
             dispatch(setIsAuth(true))
             dispatch(setUser(userInfo))
             navigate('/moduleselection', { replace: true })
-
+            
         }catch(ex)
         {
             dispatch(setIsAuth(false))
+            console.log('ex', ex);
             alert('Authentification failed ', ex);
         }
     }
