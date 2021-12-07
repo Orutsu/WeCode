@@ -1,45 +1,47 @@
-import React, {useState} from "react";
+import React, {useState, useEffect} from "react";
 import Header from "../../components/Header";
 import './style.css';
-
 import HeaderText from "../../components/HeaderText";
 import DefaultText from "../../components/DefaultText";
 import DefaultInput from '../../components/DefaultInput'
 import DefaultButton from '../../components/DefaultButton'
 import { Link, useNavigate } from 'react-router-dom';
 import { useDispatch } from "react-redux";
-import { resetAuthState } from "../../redux/auth";
+import { resetAuthState, setUser } from "../../redux/auth";
+import { changeUserData } from "../../services/UserService";
+import { useTypedSelector } from "../../redux/store.ts";
+import { getUserCreatedTasks, getUserCompletedTasks, getTask } from "../../services/TaskService";
 
-const UserCabinetScreen = ({isAdmin = false}) => {
+const UserCabinetScreen = () => {
     const navigate = useNavigate();
     const dispatch = useDispatch()
-    const [name, setName] = useState('Lan')
-    const [surname, setSurname] = useState('Fan')
-    const [email, setEmail] = useState('LanFan@gmail.com')
-    const completedTasks = [
-        {name:"Loops", score:"20%"},
-        {name:"If statement", score:"100%"},
-        {name:"While statement wefwefwefwefwef", score:"100%"},
-        {name:"react library", score:"50%"},
-        {name:"node modules", score:"40%"}
-    ]
+    const { isAuth, user, isAdmin } = useTypedSelector((store) => store.auth)
+    const [name, setName] = useState(user.name)
+    const [surname, setSurname] = useState(user.surname)
+    const [email, setEmail] = useState(user.email)
+    const [createdTasks, setCreatedtasks] = useState([]);
+    const [completedTasks, setCompletedTasks] = useState([]);
+    
     const completedTasksAmount = 4;
     const successfullyCompletedTasksAmount = 2;
     const averageMark = "70%";
+
+    useEffect(async () => {
+        const createdTasks = (await getUserCreatedTasks(user.userId)).map(task => ({name: task.title, description: task.description, complexity: task.difficulty}));
+        console.log('createdTasks', createdTasks);
+        setCreatedtasks(createdTasks);
+        const userCompletedTasks = await getUserCompletedTasks(user.userId);
+        (userCompletedTasks).forEach(async(completedTask) => {
+            const task = await getTask(completedTask.taskId); 
+            setCompletedTasks (completedTasks.concat(({name: task.title, score: completedTask.score})));
+        });
+        console.log('completedTasks', completedTasks);
+      }, []);
 
     const onSignOut = () => {
         dispatch(resetAuthState())
         navigate('/signin', { replace: true })
     }
-
-    const createdTasks = [
-        {name:"Loops", description:"Practice your skills in obtaining requirements", complexity : "3"},
-        {name:"If statement", description:"Practice your skills in creating user friendly design", complexity : "4"},
-        {name:"While statement wefwefwefwefwef", description:"Practice your skills in system modeling. Learn more about UML", complexity : "3"},
-        {name:"react library", description:"Practice your skills in writing good quality code. Learn more about clean code dfgdfhdfhjdfh dfh dfh dfhd fh", complexity : "5"},
-        {name:"node modules", description:"Practice your skills in testing the system. Learn more about testing approaches", complexity : "3"}
-    ]
-
 
     const CompletedTask = ({name, score}) => {
         return (
@@ -64,6 +66,16 @@ const UserCabinetScreen = ({isAdmin = false}) => {
         ? createdTasks.map((task) => <CreatedTask  name={task.name}  description={task.description} complexity={task.complexity} />)
         : completedTasks.map((task) => <CompletedTask  name={task.name}  score={task.score} />);
 
+    const onChangeUserData = async () => {
+        try{
+            const userInfo = await changeUserData(user.userId, name, surname, email, null);
+            console.log('userInfo', userInfo);
+            dispatch(setUser(userInfo))
+        }catch(ex)
+        {
+            alert('Update of user data failed ', ex);
+        }
+    }
 
     return (
         <div className="UserCabinetContainer">
@@ -72,13 +84,13 @@ const UserCabinetScreen = ({isAdmin = false}) => {
                 <div style={{width: 350}}> 
                     <HeaderText style={{ height: 70}} fontSize={50}>Profile</HeaderText>
                     <DefaultText fontSize={28}>Name</DefaultText>
-                    <DefaultInput style={{marginBottom: 10}} value={name} placeholder="Email" onChange={(text) => setName(text)} />
+                    <DefaultInput style={{marginBottom: 10}} value={name} placeholder="Email" onChange={(text) => {setName(text); onChangeUserData()}} />
                     <DefaultText fontSize={28}>Surname</DefaultText>
-                    <DefaultInput style={{marginBottom: 10}} value={surname} placeholder="Email" onChange={(text) => setSurname(text)} />
+                    <DefaultInput style={{marginBottom: 10}} value={surname} placeholder="Email" onChange={(text) => {setSurname(text); onChangeUserData()}} />
                     <DefaultText fontSize={28}>Email</DefaultText>
-                    <DefaultInput style={{marginBottom: 10}} value={email} placeholder="Email" onChange={(text) => setEmail(text)} />
+                    <DefaultInput style={{marginBottom: 10}} value={email} placeholder="Email" onChange={(text) => {setEmail(text);  onChangeUserData()}} />
                     <DefaultButton border="none"    
-                        onClick={() => console.log("Change password")}
+                        onClick={onChangeUserData}
                         value="Change password"
                         style={{marginTop: 20}}
                     />

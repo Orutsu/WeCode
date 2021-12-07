@@ -27,6 +27,7 @@ const SignUpScreen = () => {
     const onSignUp = async () => {
         try{
             const userInfo = await signUp(1, name, surname, email, password);
+            console.log('userInfo', userInfo);
             dispatch(setIsAuth(true))
             dispatch(setUser(userInfo))
             navigate('/moduleselection', { replace: true })
