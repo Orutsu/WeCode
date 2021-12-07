@@ -9,7 +9,8 @@ import {
   } from "react-router-dom";
 import DefaultText from "../../components/DefaultText"
 import {useDispatch} from 'react-redux'
-import { setIsAuth } from "../../redux/auth";
+import { setIsAuth, setUser } from "../../redux/auth";
+import { signIn } from "../../services/UserService";
 
 const SignInScreen = () => {
    const navigate = useNavigate()
@@ -17,9 +18,20 @@ const SignInScreen = () => {
     const [password, setPassword] = useState('')
     const dispatch = useDispatch()
 
-    const onSignIn = () => {
-        dispatch(setIsAuth(true))
-        navigate('/moduleselection', { replace: true })
+    const onSignIn = async () => {
+        try{
+            const userInfo = await signIn(email, password);
+            console.log('userInfo', userInfo);
+            dispatch(setIsAuth(true))
+            dispatch(setUser(userInfo))
+            navigate('/moduleselection', { replace: true })
+            
+        }catch(ex)
+        {
+            dispatch(setIsAuth(false))
+            console.log('ex', ex);
+            alert('Authentification failed ', ex);
+        }
     }
 
     return (
