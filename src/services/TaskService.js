@@ -14,6 +14,14 @@ export const getTask = async (taskId) => {
     return taskInfo.data;
 }
 
+export const getTaskResult = async (taskResultId) => {
+    const taskResult = (await axios.get(host + `/api/TaskResults/${taskResultId}`)).data;
+    const task = await getTask(taskResult.taskId);
+    const actualResults = await getActualResultsOfTaskResult(taskResultId);
+    actualResults.sort(compare);
+    return {taskResult : taskResult, task : task, actualResults : actualResults};
+}
+
 export const getCodeBlock = async (codeBlockId) => {
     const codeBlockInfo = await axios.get(host + `/api/CodeBlocks/${codeBlockId}`);
     return codeBlockInfo.data;
@@ -46,6 +54,12 @@ export const getExpectedResultsOfTask = async (taskId) => {
     const allExpectedResults = (await axios.get(host + `/api/ExpectedResults`)).data;
     const expectedResults = allExpectedResults.filter((expectedResult) => expectedResult.taskId === taskId);
     return expectedResults;
+}
+
+export const getActualResultsOfTaskResult = async (taskResultId) => {
+    const allActualResults = (await axios.get(host + `/api/ActualResults`)).data;
+    const actualResults  = allActualResults.filter((actualResult) => actualResult.taskResultId === taskResultId);
+    return actualResults;
 }
 
 /// eg await updateTask(22, 24, 'titile', 'dedsc', 3);

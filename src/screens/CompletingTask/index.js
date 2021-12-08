@@ -6,7 +6,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import './style.css';
 import { FaPlus, FaMinus } from 'react-icons/fa';
 import {DragDropContext, Droppable, Draggable} from 'react-beautiful-dnd';
-import { getAllCodeBlocks, getCodeBlock, getTaskWithCodeBlocks, submitTask } from "../../services/TaskService";
+import { getAllCodeBlocks, getCodeBlock, getTaskResult, getTaskWithCodeBlocks, submitTask } from "../../services/TaskService";
 import DefaultButton from '../../components/DefaultButton'
 import { useTypedSelector } from "../../redux/store";
 
@@ -44,6 +44,23 @@ const CompletingTaskScreen = ({taskId}) => {
     
         setBlocksAvailableArray(taskInfoMapped.blocks);
         console.log('blocksAvailableArray', blocksAvailableArray);
+
+        //for task seeing
+        const taskResulInfoWithActualResults = await getTaskResult(18);
+        console.log('taskResulInfoWithActualResults', taskResulInfoWithActualResults);
+        //const codeBlocks = await getAllCodeBlocks();
+        console.log('codeBlocks', codeBlocks);
+
+        const taskResultMapped = {
+            name : taskResulInfoWithActualResults.task.title, 
+            description : taskResulInfoWithActualResults.task.description,
+            complexity : taskResulInfoWithActualResults.task.difficulty,
+            score: taskResulInfoWithActualResults.taskResult.score,
+            blocks: taskResulInfoWithActualResults.actualResults?.map((actualResult) => {
+                 return {id : actualResult.codeBlockId, text : (codeBlocks.find(block => block.codeBlockId === actualResult.codeBlockId)).code};
+                })
+        };
+        console.log('taskResultMapped', taskResultMapped);
 
       }, []);
 
