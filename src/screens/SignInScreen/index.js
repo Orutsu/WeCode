@@ -41,7 +41,7 @@ const SignInScreen = () => {
         <div className="SignInContainer">
             <div className="centerBox">
                <HeaderText fontSize={64} lineHeight={80}>WeCode</HeaderText>
-               <DefaultText fontSize={24} style={{marginTop: 100, color: 'red', height: 30}}>{isErrorMessageVisible ? 'Wrong password or email': ''}</DefaultText>
+               <DefaultText fontSize={24} style={{marginTop: 50, color: 'red', height: 30}}>{isErrorMessageVisible ? 'Wrong password or email': ''}</DefaultText>
                <DefaultInput value={email} placeholder="Email" onChange={(text) => setEmail(text)} style={{marginTop: 25}}/>
                <DefaultInput value={password} placeholder="Password" type="password" onChange={(text) => setPassword(text)} style={{marginTop: 35}}/>
                <DefaultButton border="none"    

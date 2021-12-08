@@ -97,14 +97,14 @@ const UserCabinetScreen = () => {
                 <div style={{width: 350}}> 
                     <HeaderText style={{ height: 70}} fontSize={50}>Profile</HeaderText>
                     <DefaultText fontSize={28}>Name</DefaultText>
-                    <DefaultInput style={{marginBottom: 10}} value={name} placeholder="Email" onChange={(text) => {setName(text); onChangeUserData()}} />
+                    <DefaultInput style={{marginBottom: 10}} value={name} placeholder="Email" onChange={(text) => {setName(text);}} />
                     <DefaultText fontSize={28}>Surname</DefaultText>
-                    <DefaultInput style={{marginBottom: 10}} value={surname} placeholder="Email" onChange={(text) => {setSurname(text); onChangeUserData()}} />
+                    <DefaultInput style={{marginBottom: 10}} value={surname} placeholder="Email" onChange={(text) => {setSurname(text);}} />
                     <DefaultText fontSize={28}>Email</DefaultText>
-                    <DefaultInput style={{marginBottom: 10}} value={email} placeholder="Email" onChange={(text) => {setEmail(text);  onChangeUserData()}} />
+                    <DefaultInput style={{marginBottom: 10}} value={email} placeholder="Email" onChange={(text) => {setEmail(text);}} />
                     <DefaultButton border="none"    
                         onClick={onChangeUserData}
-                        value="Change password"
+                        value="Save updates"
                         style={{marginTop: 20}}
                     />
                     <DefaultButton border="none"    

@@ -8,9 +8,12 @@ import { FaPlus, FaMinus } from 'react-icons/fa';
 import {DragDropContext, Droppable, Draggable} from 'react-beautiful-dnd';
 import { getAllCodeBlocks, getCodeBlock, getTaskWithCodeBlocks } from "../../services/TaskService";
 import DefaultButton from '../../components/DefaultButton'
+import { useTypedSelector } from "../../redux/store";
 
 const CompletingTaskScreen = ({taskId}) => {
     const [taskInfo, setTaskInfo] = useState({})
+    const { taskIdToComplete } = useTypedSelector((store) => store.auth)
+    console.log(taskIdToComplete)
     // eslint-disable-next-line react-hooks/exhaustive-deps
     useEffect(async () => {
         //taskid
