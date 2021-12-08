@@ -68,7 +68,7 @@ const TasksListScreen = () => {
         )
     }
 
-    const listItems = tasksToShow.map((task, index) => <TaskCard id={index} isAdmin name={task.title}  description={task.description} complexity={task.difficulty} score={task.score}/>);
+    const listItems = tasksToShow.map((task, index) => <TaskCard id={task.taskId} isAdmin name={task.title}  description={task.description} complexity={task.difficulty} score={task.score}/>);
 
     return (
         <div className="TasksListContainer">

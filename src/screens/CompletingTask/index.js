@@ -2,7 +2,7 @@ import React, {useState, useEffect} from "react";
 import DefaultText from "../../components/DefaultText";
 import HeaderText from "../../components/HeaderText";
 import Header from "../../components/Header";
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import './style.css';
 import { FaPlus, FaMinus } from 'react-icons/fa';
 import {DragDropContext, Droppable, Draggable} from 'react-beautiful-dnd';
@@ -11,9 +11,14 @@ import DefaultButton from '../../components/DefaultButton'
 import { useTypedSelector } from "../../redux/store";
 
 const CompletingTaskScreen = ({taskId}) => {
+    
+    const navigate = useNavigate()
     const [taskInfo, setTaskInfo] = useState({})
     const { taskIdToComplete } = useTypedSelector((store) => store.auth)
     const { isAuth, user, isAdmin } = useTypedSelector((store) => store.auth)
+    const [isModalScoreActive, setIsModalScoreActive] = useState(false)
+    const [isModalErrorActive, setisModalErrorActive] = useState(false)
+    const [score, setScore] = useState(0)
     console.log(taskIdToComplete)
     // eslint-disable-next-line react-hooks/exhaustive-deps
     useEffect(async () => {
@@ -93,6 +98,27 @@ const CompletingTaskScreen = ({taskId}) => {
         setBlocksUsedArray(items);
     }
 
+    function onSubmit(){
+        if(blocksAvailableArray.length > 0){
+            setisModalErrorActive(true)
+            return;
+        }
+        submitTask(user.userId, taskIdToComplete, blocksUsedArray).then(score => {
+            setScore(score)
+            setIsModalScoreActive(true);
+        })
+    }
+    function onTryAgain(){
+        setIsModalScoreActive(false);
+    }
+    function onExit(){
+        setIsModalScoreActive(false);
+        navigate('/taskslist', { replace: false });
+    }
+
+    function onCloseError(){
+        setisModalErrorActive(false);
+    }
     return (
         <div className="CompletingTaskContainer">
             <Header />
@@ -112,7 +138,7 @@ const CompletingTaskScreen = ({taskId}) => {
                                     <ul style = {{  width: '90%', minHeight: 300, margin: 0, padding: 0, listStyleType: "none"}}{...provided.droppableProps} ref={provided.innerRef}>
                                     {blocksUsedArray?.map((block, index) => {
                                         return (
-                                            <Draggable style={{width: 400}}key={block.id} draggableId={block.id} index={index}>
+                                            <Draggable style={{width: 400}}key={`${block.id}`} draggableId={`${block.id}`} index={index}>
                                                 {(provided) => (
                                                 <li ref={provided.innerRef} {...provided.draggableProps} >
                                                     <div style ={{display: 'flex', flex: 1, flexDirection: 'rows'}}>
@@ -140,7 +166,7 @@ const CompletingTaskScreen = ({taskId}) => {
                     <DefaultText style={{ marginBottom: 5,userSelect: "none"}} fontSize={28}>Previous score: {taskInfo.previousScore}</DefaultText>                
                     <DefaultButton 
                         border="none"    
-                        onClick={() => {submitTask(user.userId, taskIdToComplete, blocksUsedArray)}}
+                        onClick={onSubmit}
                         value="Submit"
                         style={{marginTop: 50}}
                     />
@@ -148,6 +174,52 @@ const CompletingTaskScreen = ({taskId}) => {
 
                 
             </div>
+            {
+                isModalScoreActive &&
+                <div className="modal">
+                    <div className="modalContent" >
+                        <div  style = {{ width: '100%', width: '100%',flexFlow: 'column wrap', display: 'flex', flex: 1, flexDirection: 'rows', alignItems: 'center'}} >
+                            <HeaderText style={{ marginTop: 20, marginBottom: 20, userSelect: "none"}} fontSize={36}>Results</HeaderText>
+                            <DefaultText style={{ marginBottom: 20, userSelect: "none"}} fontSize={36}>{`Score: ${score}%`}</DefaultText>
+                            <div style = {{ marginBottom: 30, width: '100%', width: '100%', display: 'flex', flex: 1, flexDirection: 'rows', alignItems: 'center'}}>
+                                <DefaultButton 
+                                    style = {{ backgroundColor: "pink", marginLeft: 30, marginRight: 30}}
+                                    onClick={onExit}
+                                    border="none"    
+                                    value="Exit"
+                                />    
+                                { score != 100 &&                     
+                                    <DefaultButton 
+                                        style = {{ marginLeft: 30, marginRight: 30}}
+                                        onClick={onTryAgain}
+                                        border="none"    
+                                        value="Try Again"
+                                    />
+                                }   
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+            {
+                isModalErrorActive &&
+                <div className="modal">
+                    <div className="modalContent" >
+                        <div  style = {{ width: '100%', width: '100%',flexFlow: 'column wrap', display: 'flex', flex: 1, flexDirection: 'rows', alignItems: 'center'}} >
+                            <HeaderText style={{ marginTop: 20, marginBottom: 20, userSelect: "none"}} fontSize={36}>Error</HeaderText>
+                            <DefaultText style={{ marginBottom: 20, userSelect: "none"}} fontSize={36}>All blocks must be used</DefaultText>
+                            <div style = {{ marginBottom: 30, width: '100%', width: '100%', display: 'flex', flex: 1, flexDirection: 'rows', alignItems: 'center'}}>                           
+                                <DefaultButton 
+                                    style = {{ marginLeft: 30, marginRight: 30}}
+                                    onClick={onCloseError}
+                                    border="none"    
+                                    value="Close"
+                                />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
         </div>
     );  
 }
