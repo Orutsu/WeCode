@@ -28,7 +28,33 @@ export const getUserCreatedTasks = async (userId) => {
 //code blocks - array of strings that contain code
 //orders - string of ints separated by coma eg "1, 2, 3"
 export const createTask = async (userId, title, description, complexity, codeBlocks, orders) => {
+    const task = (await axios.post(host + "/api/Tasks", {
+        description : description,
+        title : title,
+        difficulty : complexity,
+        createdBy : userId
+        })).data;
+    console.log('task', task);
+    orders = orders.replace(/\s/g, '');
+    console.log('orders', orders);
+    const expectedResultsOrders = orders.split(',').map(function(item) {
+        return parseInt(item, 10);
+    });
 
+    const taskId = task.taskId;
+    await codeBlocks.forEach(async (codeBlock, i) => {
+        const createdBlock = (await axios.post(host + "/api/CodeBlocks", {
+            code : codeBlock
+            })).data;
+
+        const expectedResultsOrder =  expectedResultsOrders[i]
+        const expectedResult = (await axios.post(host + "/api/ExpectedResults", {
+            taskId : taskId,
+            codeBlockId : createdBlock.codeBlockId,
+            order : expectedResultsOrder
+            })).data;
+
+    });
 }
 
 //code blocks - array of code block ids in order user puts them in
