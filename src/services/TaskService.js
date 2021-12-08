@@ -48,12 +48,15 @@ export const getExpectedResultsOfTask = async (taskId) => {
     return expectedResults;
 }
 
-export const updateTask = async (taskId, title, description, complexity) => {
-    const task = (await axios.put(host + `/api/Tasks/${taskId}`, {
+/// eg await updateTask(22, 24, 'titile', 'dedsc', 3);
+export const updateTask = async (taskId, userId, title, description, complexity) => {
+    await axios.put(host + `/api/Tasks/${taskId}`, {
+        taskId : taskId,
         description : description,
         title : title,
         difficulty : complexity,
-        })).data;
+        createdBy : userId
+        });
 }
 
 
