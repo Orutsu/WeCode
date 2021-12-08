@@ -14,16 +14,33 @@ export const getTask = async (taskId) => {
     return taskInfo.data;
 }
 
+export const getCodeBlock = async (codeBlockId) => {
+    const codeBlockInfo = await axios.get(host + `/api/CodeBlocks/${codeBlockId}`);
+    return codeBlockInfo.data;
+}
+
 export const getUserCompletedTasks = async (userId) => {
     const tasksResults = await axios.get(host + `/api/TaskResults`);
     console.log('tasksResults', tasksResults.data)
-    return tasksResults.data.filter((tasksResult) => tasksResult.submittedBy == userId);
+    return tasksResults.data.filter((tasksResult) => tasksResult.submittedBy === userId);
 }
 
 export const getUserCreatedTasks = async (userId) => {
     const tasks = await getAllTasks();
     console.log(userId, tasks)
-    return tasks.filter((task) => task.createdBy == userId);
+    return tasks.filter((task) => task.createdBy === userId);
+}
+
+export const getTaskWithCodeBlocks = async (taskId) => {
+    const task = await getTask(taskId);
+    const allExpectedResults = (await axios.get(host + `/api/ExpectedResults`)).data;
+    const expectedResults = allExpectedResults.filter((expectedResult) => expectedResult.taskId === task.taskId);
+    return {task : task, expectedResults : expectedResults};
+}
+
+export const getAllCodeBlocks = async () => {
+    const codeBlocksinfo = await axios.get(host + `/api/CodeBlocks`);
+    return codeBlocksinfo.data;
 }
 
 //code blocks - array of strings that contain code
@@ -54,9 +71,10 @@ export const createTask = async (userId, title, description, complexity, codeBlo
             codeBlockId : createdBlock.codeBlockId,
             order : expectedResultsOrder
             })).data;
-
     });
 }
+
+
 
 //code blocks - array of code block ids in order user puts them in
 export const submitTask = async (userId, taskId, codeBlocks) => {

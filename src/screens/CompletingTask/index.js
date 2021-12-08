@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, {useState, useEffect} from "react";
 import DefaultText from "../../components/DefaultText";
 import HeaderText from "../../components/HeaderText";
 import Header from "../../components/Header";
@@ -6,62 +6,34 @@ import { Link } from 'react-router-dom';
 import './style.css';
 import { FaPlus, FaMinus } from 'react-icons/fa';
 import {DragDropContext, Droppable, Draggable} from 'react-beautiful-dnd';
-
+import { getAllCodeBlocks, getCodeBlock, getTaskWithCodeBlocks } from "../../services/TaskService";
 import DefaultButton from '../../components/DefaultButton'
 
 const CompletingTaskScreen = ({taskId}) => {
+    const [taskInfo, setTaskInfo] = useState({})
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    useEffect(async () => {
+        //taskid
+        const taskInfoWIthCodeBlocks = await getTaskWithCodeBlocks(18);
+        console.log('task in CompletingTaskScreen', taskInfoWIthCodeBlocks);
+        const codeBlocks = await getAllCodeBlocks();
+        console.log('codeBlocks', codeBlocks);
 
-    // get task by id
-    let taskInfo = {
-        name: "Loops",
-        description: "Print numbers from 1 to 10",
-        complexity: "1",
-        previousScore: "40%", // Хз чи треба таке
-        blocks: [
-            {
-                id: "1",
-                text: "let i = 0;"
-            },
-            {
-                id: "2",
-                text: "let i = 1;"
-            },
-            {
-                id: "3",
-                text: "while (i < 10)"
-            },
-            {
-                id: "4",
-                text: "while (i <= 10)"
-            },
-            {
-                id: "5",
-                text: "console.log(i)"
-            },
-            {
-                id: "6",
-                text: "{"
-            },
-            {
-                id: "7",
-                text: "}"
-            },
-            {
-                id: "8",
-                text: "print(i)"
-            },
-            {
-                id: "9",
-                text: "i += 1;"
-            },
-            {
-                id: "10",
-                text: "some crazy staff that not fits into one line"
-            }
-        ]
-    }
+        const taskInfoMapped = {
+            name : taskInfoWIthCodeBlocks.task.title, 
+            description : taskInfoWIthCodeBlocks.task.description,
+            complexity : taskInfoWIthCodeBlocks.task.difficulty,
+            previousScore: null,
+            blocks: taskInfoWIthCodeBlocks.expectedResults?.map((expectedResult) => {
+                 return {id : expectedResult.codeBlockId, text : (codeBlocks.find(block => block.codeBlockId === expectedResult.codeBlockId)).code};
+                })
+        };
 
-    const [blocksAvailableArray, setBlocksAvailableArray] = useState(taskInfo.blocks)
+        setTaskInfo(taskInfoMapped);
+        setBlocksAvailableArray(taskInfo.blocks);
+      }, []);
+
+    const [blocksAvailableArray, setBlocksAvailableArray] = useState([])
     const [blocksUsedArray, setBlocksUsedArray] = useState([])
 
 
@@ -120,7 +92,7 @@ const CompletingTaskScreen = ({taskId}) => {
             <div style={{marginTop: 50, paddingLeft: 100, paddingRight: 100, display: 'flex', flex: 1, flexDirection: 'rows', justifyContent: "space-between", alignItems: 'start'}}>
                 <div style={{width: 400}}> 
                     <HeaderText style={{ height: 70, userSelect: "none"}} fontSize={36}>Code blocks</HeaderText>
-                    {blocksAvailableArray.map((block) => <Block isAvailable = {true} key = {block.id} block={block} />)}
+                    {blocksAvailableArray?.map((block) => <Block isAvailable = {true} key = {block.id} block={block} />)}
                 </div>
 
 
@@ -131,7 +103,7 @@ const CompletingTaskScreen = ({taskId}) => {
                             <Droppable droppableId="usedBlocks">
                                 {(provided) => (
                                     <ul style = {{  width: '90%', minHeight: 300, margin: 0, padding: 0, listStyleType: "none"}}{...provided.droppableProps} ref={provided.innerRef}>
-                                    {blocksUsedArray.map((block, index) => {
+                                    {blocksUsedArray?.map((block, index) => {
                                         return (
                                             <Draggable style={{width: 400}}key={block.id} draggableId={block.id} index={index}>
                                                 {(provided) => (
