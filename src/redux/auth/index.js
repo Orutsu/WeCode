@@ -1,6 +1,7 @@
 import authSlice from './slice.ts';
 
 export const {
+  setTaskResultIdToWatch,
   setTaskIdToComplete,
   setIsAdmin,
   setIsAuth,
