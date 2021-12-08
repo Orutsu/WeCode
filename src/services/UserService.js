@@ -31,6 +31,18 @@ export const getUser = async (userId) =>{
     return userInfo.data;
 }
 
+export const getUserStat = async (userId) =>{
+    const userInfo = await axios.get(host + `/api/Users/Stat/${userId}`);
+    console.log('getUserStat', userInfo);
+    return userInfo.data;
+}
+
+export const getAdminStat = async (userId) =>{
+    const userInfo = await axios.get(host + `/api/Users/AdminStat/${userId}`);
+    console.log('getAdminStat', userInfo);
+    return userInfo.data;
+}
+
 export const changeUserData = async (userId, name, surname, email, password) =>{
     const currentUserData = await getUser(userId);
 

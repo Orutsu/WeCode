@@ -8,7 +8,7 @@ import DefaultButton from '../../components/DefaultButton'
 import { Link, useNavigate } from 'react-router-dom';
 import { useDispatch } from "react-redux";
 import { resetAuthState, setUser } from "../../redux/auth";
-import { changeUserData } from "../../services/UserService";
+import { changeUserData, getUserStat, getAdminStat } from "../../services/UserService";
 import { useTypedSelector } from "../../redux/store.ts";
 import { getUserCreatedTasks, getUserCompletedTasks, getTask } from "../../services/TaskService";
 
@@ -21,15 +21,28 @@ const UserCabinetScreen = () => {
     const [email, setEmail] = useState(user.email)
     const [createdTasks, setCreatedtasks] = useState([]);
     const [completedTasks, setCompletedTasks] = useState([]);
+    const [userStat, setUserStat] = useState({})
     
-    const completedTasksAmount = 4;
-    const successfullyCompletedTasksAmount = 2;
-    const averageMark = "70%";
+  
+    const getUserStatistics = async () => {
+        let userStatTemp = {}
+        if (isAdmin) {
+            const userStatResult = await getAdminStat(user.userId)
+            console.log('userStatResult', userStatResult)
+            userStatTemp = userStatResult
+        } else {
+            const userStatResult = await getUserStat(user.userId)
+            console.log('userStatResult', userStatResult)
+            userStatTemp = userStatResult
+        }
+        setUserStat(userStatTemp)
+    }
 
     useEffect(async () => {
         const createdTasks = (await getUserCreatedTasks(user.userId)).map(task => ({name: task.title, description: task.description, complexity: task.difficulty}));
         console.log('createdTasks', createdTasks);
         setCreatedtasks(createdTasks);
+        getUserStatistics()
         const userCompletedTasks = await getUserCompletedTasks(user.userId);
         (userCompletedTasks).forEach(async(completedTask) => {
             const task = await getTask(completedTask.taskId); 
@@ -124,9 +137,9 @@ const UserCabinetScreen = () => {
                         <div style={{ height: 70}} ></div>
                         <DefaultText fontSize={28}>Statistics: </DefaultText>
                         <ul>
-                            <li><DefaultText fontSize={28}>Number of completed tasks: <b style={{color: 'rosybrown'}} >{completedTasksAmount}</b></DefaultText></li>
-                            <li><DefaultText fontSize={28}>Number of successfully completed tasks: <b style={{color: 'rosybrown'}} >{successfullyCompletedTasksAmount}</b></DefaultText></li>
-                            <li><DefaultText fontSize={28}>Average mark: <b style={{color: 'rosybrown'}} >{averageMark}</b></DefaultText></li>
+                            <li><DefaultText fontSize={28}>Number of completed tasks: <b style={{color: 'rosybrown'}} >{userStat?.numberOfCompTasks}</b></DefaultText></li>
+                            <li><DefaultText fontSize={28}>Number of successfully completed tasks: <b style={{color: 'rosybrown'}} >{userStat?.numberOfSuccessTasks}</b></DefaultText></li>
+                            <li><DefaultText fontSize={28}>Average mark: <b style={{color: 'rosybrown'}} >{userStat?.averMark}</b></DefaultText></li>
                         </ul>
                     </div>
                 }
