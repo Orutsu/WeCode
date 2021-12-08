@@ -10,7 +10,7 @@ import { useDispatch } from "react-redux";
 import { resetAuthState, setUser } from "../../redux/auth";
 import { changeUserData, getUserStat, getAdminStat } from "../../services/UserService";
 import { useTypedSelector } from "../../redux/store.ts";
-import { getUserCreatedTasks, getUserCompletedTasks, getTask, getAllTasks } from "../../services/TaskService";
+import { getUserCreatedTasks, getUserCompletedTasks, getTask, getAllTasks, updateTask } from "../../services/TaskService";
 
 const UserCabinetScreen = () => {
     const navigate = useNavigate();
