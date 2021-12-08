@@ -31,6 +31,8 @@ const CompletingTaskScreen = ({taskId}) => {
                  return {id : expectedResult.codeBlockId, text : (codeBlocks.find(block => block.codeBlockId === expectedResult.codeBlockId)).code};
                 })
         };
+        
+        shuffle(taskInfoMapped.blocks);
 
         setTaskInfo(taskInfoMapped);
         console.log('taskInfo', taskInfo);
@@ -39,6 +41,10 @@ const CompletingTaskScreen = ({taskId}) => {
         console.log('blocksAvailableArray', blocksAvailableArray);
 
       }, []);
+
+    const shuffle = (array) => {
+       array.sort(() => Math.random() - 0.5);
+    }
 
     const [blocksAvailableArray, setBlocksAvailableArray] = useState([])
     const [blocksUsedArray, setBlocksUsedArray] = useState([])
