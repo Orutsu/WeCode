@@ -79,6 +79,13 @@ const CreateTaskScreen = () => {
     )
   };
 
+  function onSetComplexityText(text) {
+    var value = parseInt(text);
+    if((value > 0 && value <= 10) || text == ""){
+        setComplexityText(text)
+    }
+  }
+
   return (
     <div className="createTaskContainer">
       <Header />
@@ -87,7 +94,7 @@ const CreateTaskScreen = () => {
           <HeaderText fontSize={48}>Create task</HeaderText>
           <DefaultInput value={taskNameText} placeholder="Name" onChange={(text) => setTaskNameText(text)} style={{marginTop: 10, width: 450}}/>
           <DefaultInput value={descriptionText} placeholder="Description" isMultiline onChange={(text) => setDescriptionText(text)} style={{marginTop:25, height: 400}}/>
-          <DefaultInput value={complexityText} placeholder="Complexity"  onChange={(text) => setComplexityText(text)} style={{marginTop:25}}/>
+          <DefaultInput value={complexityText} placeholder="Complexity"  onChange={(text) => onSetComplexityText(text)} style={{marginTop:25}}/>
         </div>
         <div style={{minHeight: 500, paddingLeft: 25,paddingRight: 25,  width: 500}}>
           <HeaderText fontSize={48} style={{userSelect: "none"}}>Blocks</HeaderText>
