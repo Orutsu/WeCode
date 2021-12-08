@@ -14,6 +14,7 @@ import ModuleSelectionScreen from "./screens/ModuleSelectionScreen";
 import TasksListScreen from "./screens/TasksList";
 import UserCabinetScreen from "./screens/UserCabinet";
 import CompletingTaskScreen from "./screens/CompletingTask";
+import CreateTaskScreen from "./screens/CreateTask";
 
 export default function App() {
   const { isAuth, user } = useTypedSelector((store) => store.auth)
@@ -34,6 +35,7 @@ export default function App() {
           <Route path="/taskslist" element={<TasksListScreen />}/>
           <Route path="/usercabinet" element={<UserCabinetScreen />}/>
           <Route path="/completingtask" element={<CompletingTaskScreen />}/>
+          <Route path="/createtask" element={<CreateTaskScreen />}/>
           <Route path="/" element={<RedirectingHandler />} />
         </Routes >
     </Router>

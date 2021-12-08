@@ -13,8 +13,12 @@ const TasksListScreen = ({isAdmin = true}) => {
         if (!isAdmin) {
             navigate('/completingtask', { replace: false })
         } else {
-            navigate('/createtask', { replace: false })
+            // edit task screen
         }
+    }
+
+    const onAddNewTaskClick = () => {
+        navigate('/createtask', { replace: false })
     }
 
     const onEditTaskClick = (e) => {
@@ -62,7 +66,7 @@ const TasksListScreen = ({isAdmin = true}) => {
                             }
                             
                             {isAdmin &&
-                                <Link to= '/addtask' style = {{color: "inherit", textDecoration: "inherit"}} >      
+                                <Link to='/createtask' style = {{color: "inherit", textDecoration: "inherit"}} >      
                                     <DefaultText fontSize={36} style={{paddingBottom: 20, userSelect: "none" }}>Add new <FaPlusSquare size="22" /></DefaultText>
                                 </Link>
                             }
