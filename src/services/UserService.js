@@ -1,43 +1,56 @@
 var pjson = require('../../package.json');
-console.log(pjson.host);
+var axios = require('axios').default;
+axios.defaults.headers.post['Content-Type'] = 'application/json;charset=utf-8';
+axios.defaults.headers.post['Access-Control-Allow-Origin'] = '*';
 var host = pjson.host;
 
-export const signUp = (roleId,  name, surname, email, dateOfBirth, password) => {
-    const axios = require('axios').default;
-    //doesn't work
-    fetch(host + "/api/Users/signup", {
-        method: 'POST', 
-        mode: "cors",
-        headers: {
-            'Accept': 'application/json, text/plain',
-            'Content-Type': 'application/json;charset=UTF-8',
-            'Access-Control-Allow-Origin' : '*',
-            'Access-Control-Allow-Methods' : '*',
-            'Access-Control-Allow-Headers' : '*',
-          },
-          credentials: 'include',
-        body: JSON.stringify({
-            roleId : roleId,
-            name : name,
-            surname : surname,
-            email : email,
-            dateOfBirth : dateOfBirth,
-            password : password,
-        })}).then(() => {});
-        
-   //doesn't work either
-    axios.defaults.headers.post['Content-Type'] ='application/json;charset=utf-8';
-    axios.defaults.headers.post['Access-Control-Allow-Origin'] = '*';
-        axios.post(host + "/api/Users/signup", {
-            roleId : roleId,
-            name : name,
-            surname : surname,
-            email : email,
-            dateOfBirth : dateOfBirth,
-            password : password,
-          })
+export const signUp = async (roleId,  name, surname, email, password) => {
+    const userInfo = await axios.post(host + "/api/Users/signup", {
+        roleId : roleId,
+        name : name,
+        surname : surname,
+        email : email,
+        password : password,
+        });
+    return userInfo.data;
 }
 
-export const getUsers = () =>{
-    fetch(host + "/api/Users", {mode: 'no-cors'}).then((response) =>{console.log(response)});
+export const signIn = async (email, password) => {
+    const userInfo = await axios.post(host + `/api/Users/signin?email=${email}&password=${password}`);
+    console.log('signIn', userInfo);
+    return userInfo.data;
+}
+
+export const getUsers = async () =>{
+    return await axios.get(host + "/api/Users");
+}
+
+export const getUser = async (userId) =>{
+    const userInfo = await axios.get(host + `/api/Users/${userId}`);
+    console.log('getUser', userInfo);
+    return userInfo.data;
+}
+
+export const changeUserData = async (userId, name, surname, email, password) =>{
+    const currentUserData = await getUser(userId);
+
+    if(name)
+    {
+        currentUserData.name = name;
+    }
+    if(surname)
+    {
+        currentUserData.surname = surname;
+    }
+    if(email)
+    {
+        currentUserData.email = email;
+    }
+    if(password)
+    {
+        currentUserData.name = password;
+    }
+
+    await axios.put(host + `/api/Users/${userId}`, currentUserData);
+    return currentUserData;
 }
