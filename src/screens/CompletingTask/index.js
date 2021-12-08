@@ -6,17 +6,17 @@ import { Link } from 'react-router-dom';
 import './style.css';
 import { FaPlus, FaMinus } from 'react-icons/fa';
 import {DragDropContext, Droppable, Draggable} from 'react-beautiful-dnd';
-import { getAllCodeBlocks, getCodeBlock, getTaskWithCodeBlocks } from "../../services/TaskService";
+import { getAllCodeBlocks, getCodeBlock, getTaskWithCodeBlocks, submitTask } from "../../services/TaskService";
 import DefaultButton from '../../components/DefaultButton'
 import { useTypedSelector } from "../../redux/store";
 
 const CompletingTaskScreen = ({taskId}) => {
     const [taskInfo, setTaskInfo] = useState({})
     const { taskIdToComplete } = useTypedSelector((store) => store.auth)
+    const { isAuth, user, isAdmin } = useTypedSelector((store) => store.auth)
     console.log(taskIdToComplete)
     // eslint-disable-next-line react-hooks/exhaustive-deps
     useEffect(async () => {
-        //taskid
         const taskInfoWIthCodeBlocks = await getTaskWithCodeBlocks(taskIdToComplete);
         console.log('task in CompletingTaskScreen', taskInfoWIthCodeBlocks);
         const codeBlocks = await getAllCodeBlocks();
@@ -31,10 +31,13 @@ const CompletingTaskScreen = ({taskId}) => {
                  return {id : expectedResult.codeBlockId, text : (codeBlocks.find(block => block.codeBlockId === expectedResult.codeBlockId)).code};
                 })
         };
-        console.log('taskInfoMapped', taskInfoMapped);
 
         setTaskInfo(taskInfoMapped);
-        setBlocksAvailableArray(taskInfo.blocks);
+        console.log('taskInfo', taskInfo);
+    
+        setBlocksAvailableArray(taskInfoMapped.blocks);
+        console.log('blocksAvailableArray', blocksAvailableArray);
+
       }, []);
 
     const [blocksAvailableArray, setBlocksAvailableArray] = useState([])
@@ -137,7 +140,7 @@ const CompletingTaskScreen = ({taskId}) => {
                     <DefaultText style={{ marginBottom: 5,userSelect: "none"}} fontSize={28}>Previous score: {taskInfo.previousScore}</DefaultText>                
                     <DefaultButton 
                         border="none"    
-                        onClick={() => {console.log("Submit", blocksUsedArray)}}
+                        onClick={() => {submitTask(user.userId, taskIdToComplete, blocksUsedArray)}}
                         value="Submit"
                         style={{marginTop: 50}}
                     />

@@ -33,15 +33,21 @@ export const getUserCreatedTasks = async (userId) => {
 
 export const getTaskWithCodeBlocks = async (taskId) => {
     const task = await getTask(taskId);
-    const allExpectedResults = (await axios.get(host + `/api/ExpectedResults`)).data;
-    const expectedResults = allExpectedResults.filter((expectedResult) => expectedResult.taskId === task.taskId);
-    return {task : task, expectedResults : expectedResults};
+    const expectedResultsOfTask = await getExpectedResultsOfTask(taskId);
+    return {task : task, expectedResults : expectedResultsOfTask};
 }
 
 export const getAllCodeBlocks = async () => {
     const codeBlocksinfo = await axios.get(host + `/api/CodeBlocks`);
     return codeBlocksinfo.data;
 }
+
+export const getExpectedResultsOfTask = async (taskId) => {
+    const allExpectedResults = (await axios.get(host + `/api/ExpectedResults`)).data;
+    const expectedResults = allExpectedResults.filter((expectedResult) => expectedResult.taskId === taskId);
+    return expectedResults;
+}
+
 
 //code blocks - array of strings that contain code
 //orders - string of ints separated by coma eg "1, 2, 3"
@@ -74,9 +80,37 @@ export const createTask = async (userId, title, description, complexity, codeBlo
     });
 }
 
-
-
 //code blocks - array of code block ids in order user puts them in
 export const submitTask = async (userId, taskId, codeBlocks) => {
+    const score = await getScore(taskId, codeBlocks);
+    console.log('score', score);
+    const taskResult = (await axios.post(host + "/api/TaskResults", {
+        taskId : taskId,
+        submittedBy : userId,
+        score : score,
+        })).data;
+    console.log('taskResult', taskResult);
+    await codeBlocks.forEach(async (codeBlock, i) => {
+        const actualResult = (await axios.post(host + "/api/ActualResults", {
+            taskResultId : taskResult.taskResultId,
+            codeBlockId : codeBlock.id,
+            order : i + 1
+            })).data;
+    });
 
+    return score;
+}
+
+const getScore = async (taskId, codeBlocks) => {
+    const expectedResults = await getExpectedResultsOfTask(taskId);
+    console.log('expectedResults', expectedResults);
+
+    let correctBlocks = 0;
+    expectedResults.forEach((expectedResult, i) => {
+        if(expectedResult.codeBlockId === codeBlocks[i]?.id){
+            ++correctBlocks;
+        }
+    });
+
+    return parseInt(correctBlocks * 100.0 / expectedResults.length) ;
 }
