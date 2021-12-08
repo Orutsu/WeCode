@@ -8,9 +8,11 @@ import { FaPlus, FaMinus } from 'react-icons/fa';
 import {DragDropContext, Droppable, Draggable} from 'react-beautiful-dnd';
 
 import DefaultButton from '../../components/DefaultButton'
+import { useTypedSelector } from "../../redux/store";
 
-const CompletingTaskScreen = ({taskId}) => {
-
+const CompletingTaskScreen = () => {
+    const {taskIdToComplete} = useTypedSelector((store) => store.auth)
+    console.log(taskIdToComplete)
     // get task by id
     let taskInfo = {
         name: "Loops",

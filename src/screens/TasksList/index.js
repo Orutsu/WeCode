@@ -2,19 +2,23 @@ import React, {useEffect, useState} from "react";
 import DefaultText from "../../components/DefaultText";
 import Header from "../../components/Header";
 import './style.css';
+import {useDispatch} from 'react-redux'
 import HeaderText from "../../components/HeaderText";
 import { Link, useNavigate } from 'react-router-dom';
 import { FaPlusSquare } from 'react-icons/fa';
 import { useTypedSelector } from "../../redux/store";
 import { getAllTasks, getUserCreatedTasks } from "../../services/TaskService";
+import { setTaskIdToComplete } from "../../redux/auth";
 
 const TasksListScreen = () => {
     const {user, isAdmin} = useTypedSelector((store) => store.auth)
     const [isLoading, setIsLoading] = useState(false)
     const [tasksToShow, setTasksToShow] = useState([])
     const navigate = useNavigate()
+    const dispatch = useDispatch()
 
     const onTaskCardClick = (taskId) => {
+        dispatch(setTaskIdToComplete(taskId))
         if (!isAdmin) {
             navigate('/completingtask', { replace: false })
         } else {
