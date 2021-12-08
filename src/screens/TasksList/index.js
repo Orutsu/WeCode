@@ -25,13 +25,8 @@ const TasksListScreen = () => {
     const getTask = async () => {
         setIsLoading(true)
         let tasks = []
-        if (isAdmin) {
-            const allTasks = await getUserCreatedTasks(user.userId)
-            tasks = allTasks
-        } else {
-            const allTasks = await getAllTasks()
-            tasks = allTasks
-        }
+        const allTasks = await getAllTasks()
+        tasks = allTasks
         setTasksToShow(tasks)
         setIsLoading(false)
         return tasks
@@ -79,7 +74,7 @@ const TasksListScreen = () => {
                         <HeaderText fontSize={50} style={{paddingTop: 50, paddingBottom: 20}}>Coding</HeaderText>
                         <div style={{ display: 'flex', flex: 1, flexDirection: 'row', justifyContent: "space-between"}}>
                             {isAdmin 
-                                ? <DefaultText fontSize={36} style={{paddingBottom: 20}}>Created tasks</DefaultText>
+                                ? <DefaultText fontSize={36} style={{paddingBottom: 20}}>All tasks</DefaultText>
                                 : <DefaultText fontSize={36} style={{paddingBottom: 20}}>Available tasks</DefaultText>
                             }
                             
