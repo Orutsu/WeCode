@@ -10,7 +10,7 @@ import { useDispatch } from "react-redux";
 import { resetAuthState, setUser } from "../../redux/auth";
 import { changeUserData, getUserStat, getAdminStat } from "../../services/UserService";
 import { useTypedSelector } from "../../redux/store.ts";
-import { getUserCreatedTasks, getUserCompletedTasks, getTask } from "../../services/TaskService";
+import { getUserCreatedTasks, getUserCompletedTasks, getTask, getAllTasks } from "../../services/TaskService";
 
 const UserCabinetScreen = () => {
     const navigate = useNavigate();
@@ -38,16 +38,21 @@ const UserCabinetScreen = () => {
         setUserStat(userStatTemp)
     }
 
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     useEffect(async () => {
         const createdTasks = (await getUserCreatedTasks(user.userId)).map(task => ({name: task.title, description: task.description, complexity: task.difficulty}));
         console.log('createdTasks', createdTasks);
         setCreatedtasks(createdTasks);
         getUserStatistics()
         const userCompletedTasks = await getUserCompletedTasks(user.userId);
-        (userCompletedTasks).forEach(async(completedTask) => {
-            const task = await getTask(completedTask.taskId); 
-            setCompletedTasks (completedTasks.concat(({name: task.title, score: completedTask.score})));
+        const allTasks = await getAllTasks();
+
+        const uniqueCompletedTasks = (userCompletedTasks).map((completedTask) => {
+            const task = allTasks.find((task) => task.taskId === completedTask.taskId);
+            return {name: task?.title, score: completedTask.score};
         });
+
+        setCompletedTasks(uniqueCompletedTasks);
         console.log('completedTasks', completedTasks);
       }, []);
 
