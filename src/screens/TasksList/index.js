@@ -1,12 +1,17 @@
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import DefaultText from "../../components/DefaultText";
 import Header from "../../components/Header";
 import './style.css';
 import HeaderText from "../../components/HeaderText";
 import { Link, useNavigate } from 'react-router-dom';
 import { FaPlusSquare } from 'react-icons/fa';
+import { useTypedSelector } from "../../redux/store";
+import { getAllTasks, getUserCreatedTasks } from "../../services/TaskService";
 
-const TasksListScreen = ({isAdmin = true}) => { 
+const TasksListScreen = () => {
+    const {user, isAdmin} = useTypedSelector((store) => store.auth)
+    const [isLoading, setIsLoading] = useState(false)
+    const [tasksToShow, setTasksToShow] = useState([])
     const navigate = useNavigate()
 
     const onTaskCardClick = (taskId) => {
@@ -16,6 +21,27 @@ const TasksListScreen = ({isAdmin = true}) => {
             // edit task screen
         }
     }
+
+    const getTask = async () => {
+        setIsLoading(true)
+        let tasks = []
+        if (isAdmin) {
+            const allTasks = await getUserCreatedTasks(user.userId)
+            tasks = allTasks
+        } else {
+            const allTasks = await getAllTasks()
+            tasks = allTasks
+        }
+        setTasksToShow(tasks)
+        setIsLoading(false)
+        return tasks
+    }
+
+    useEffect(() => {
+        console.log('isAdmin', isAdmin)
+        console.log('user', user)
+        getTask()
+    }, [])
 
     const onAddNewTaskClick = () => {
         navigate('/createtask', { replace: false })
@@ -43,15 +69,7 @@ const TasksListScreen = ({isAdmin = true}) => {
         )
     }
 
-    let tasks = [
-        {name:"Loops", description:"Practice your skills in obtaining requirements", complexity : "3", score: "-"},
-        {name:"If statement", description:"Practice your skills in creating user friendly design", complexity : "4", score: "-"},
-        {name:"While statement wefwefwefwefwef", description:"Practice your skills in system modeling. Learn more about UML", complexity : "3", score: "30%"},
-        {name:"react library", description:"Practice your skills in writing good quality code. Learn more about clean code dfgdfhdfhjdfh dfh dfh dfhd fh", complexity : "5", score: "40%"},
-        {name:"node modules", description:"Practice your skills in testing the system. Learn more about testing approaches", complexity : "3", score: "20%"}
-    ]
-
-    const listItems = tasks.map((task, index) => <TaskCard id={index} isAdmin name={task.name}  description={task.description} complexity={task.complexity} score={task.score}/>);
+    const listItems = tasksToShow.map((task, index) => <TaskCard id={index} isAdmin name={task.title}  description={task.description} complexity={task.difficulty} score={task.score}/>);
 
     return (
         <div className="TasksListContainer">

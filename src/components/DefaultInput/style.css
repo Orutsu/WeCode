@@ -7,7 +7,7 @@
 
 .input {
     width: 100%;
-    height: 56px;
+    height: inherit;
     position: relative;
     padding: 0px 16px;
     border: none;
@@ -20,6 +20,7 @@
     outline: none;
     transition: 0.3s background-color ease-in-out, 0.3s box-shadow ease-in-out, 0.1s padding ease-in-out;
     -webkit-appearance: none;
+    resize: none;
 }
 
 .input::placeholder {

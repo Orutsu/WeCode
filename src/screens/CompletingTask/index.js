@@ -113,6 +113,7 @@ const CompletingTaskScreen = ({taskId}) => {
         items.splice(result.destination.index, 0, reorderedItem);
         setBlocksUsedArray(items);
     }
+
     return (
         <div className="CompletingTaskContainer">
             <Header />
@@ -127,26 +128,26 @@ const CompletingTaskScreen = ({taskId}) => {
                     <HeaderText style={{ height: 70, userSelect: "none"}} fontSize={36}>Solution</HeaderText>
                     <div style = {{border: '10px solid #EDE7D7', borderRadius: 16, paddingTop: 20, display: 'flex', flex: 1, justifyContent:'center'}}>
                         <DragDropContext  onDragEnd={handleOnDragEnd}>
-                        <Droppable droppableId="usedBlocks">
-                            {(provided) => (
-                                <ul style = {{  width: '90%', minHeight: 300, margin: 0, padding: 0, listStyleType: "none"}}{...provided.droppableProps} ref={provided.innerRef}>
-                                {blocksUsedArray.map((block, index) => {
-                                    return (
-                                        <Draggable style={{width: 400}}key={block.id} draggableId={block.id} index={index}>
-                                            {(provided) => (
-                                            <li ref={provided.innerRef} {...provided.draggableProps} >
-                                                <div style ={{display: 'flex', flex: 1, flexDirection: 'rows'}}>
-                                                    <Block  {...provided.dragHandleProps} isAvailable = {false} key = {block.id} block={block} />
-                                                </div>
-                                            </li>
-                                            )}
-                                        </Draggable>
-                                    );
-                                })}
-                                {provided.placeholder}
-                                </ul>
-                            )}
-                        </Droppable>
+                            <Droppable droppableId="usedBlocks">
+                                {(provided) => (
+                                    <ul style = {{  width: '90%', minHeight: 300, margin: 0, padding: 0, listStyleType: "none"}}{...provided.droppableProps} ref={provided.innerRef}>
+                                    {blocksUsedArray.map((block, index) => {
+                                        return (
+                                            <Draggable style={{width: 400}}key={block.id} draggableId={block.id} index={index}>
+                                                {(provided) => (
+                                                <li ref={provided.innerRef} {...provided.draggableProps} >
+                                                    <div style ={{display: 'flex', flex: 1, flexDirection: 'rows'}}>
+                                                        <Block  {...provided.dragHandleProps} isAvailable = {false} key = {block.id} block={block} />
+                                                    </div>
+                                                </li>
+                                                )}
+                                            </Draggable>
+                                        );
+                                    })}
+                                    {provided.placeholder}
+                                    </ul>
+                                )}
+                            </Droppable>
                         </DragDropContext>
                     </div>
                 </div>
@@ -154,11 +155,12 @@ const CompletingTaskScreen = ({taskId}) => {
 
                 <div style={{width: 400}}> 
                     <HeaderText style={{ height: 70, userSelect: "none"}} fontSize={36}>Task description</HeaderText>
-                    <DefaultText style={{ marginBottom: 5, userSelect: "none"}}fontSize={28}>Name: {taskInfo.name}</DefaultText>
-                    <DefaultText style={{ marginBottom: 5,userSelect: "none"}}fontSize={28}>Complexity: {taskInfo.complexity}</DefaultText>
-                    <DefaultText style={{ marginBottom: 5,userSelect: "none"}}fontSize={28}>Description: {taskInfo.description}</DefaultText>
-                    <DefaultText style={{ marginBottom: 5,userSelect: "none"}}fontSize={28}>Previous score: {taskInfo.previousScore}</DefaultText>                
-                    <DefaultButton border="none"    
+                    <DefaultText style={{ marginBottom: 5, userSelect: "none"}} fontSize={28}>Name: {taskInfo.name}</DefaultText>
+                    <DefaultText style={{ marginBottom: 5,userSelect: "none"}} fontSize={28}>Complexity: {taskInfo.complexity}</DefaultText>
+                    <DefaultText style={{ marginBottom: 5,userSelect: "none"}} fontSize={28}>Description: {taskInfo.description}</DefaultText>
+                    <DefaultText style={{ marginBottom: 5,userSelect: "none"}} fontSize={28}>Previous score: {taskInfo.previousScore}</DefaultText>                
+                    <DefaultButton 
+                        border="none"    
                         onClick={() => {console.log("Submit", blocksUsedArray)}}
                         value="Submit"
                         style={{marginTop: 50}}

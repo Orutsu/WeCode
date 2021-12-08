@@ -9,13 +9,14 @@ import {
   } from "react-router-dom";
 import DefaultText from "../../components/DefaultText"
 import {useDispatch} from 'react-redux'
-import { setIsAuth, setUser } from "../../redux/auth";
+import { setIsAdmin, setIsAuth, setUser } from "../../redux/auth";
 import { signIn } from "../../services/UserService";
 
 const SignInScreen = () => {
    const navigate = useNavigate()
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
+    const [isErrorMessageVisible, setisErrorMessageVisible] = useState(false)
     const dispatch = useDispatch()
 
     const onSignIn = async () => {
@@ -24,12 +25,14 @@ const SignInScreen = () => {
             console.log('userInfo', userInfo);
             dispatch(setIsAuth(true))
             dispatch(setUser(userInfo))
-            navigate('/moduleselection', { replace: true })
-            
-        }catch(ex)
+            dispatch(setIsAdmin(userInfo.roleId !== 1))
+            navigate('/moduleselection', { replace: true })        
+        } 
+            catch(ex)
         {
             dispatch(setIsAuth(false))
-            console.log('ex', ex);
+            console.log(ex.response);
+            setisErrorMessageVisible(true)
             alert('Authentification failed ', ex);
         }
     }
@@ -38,7 +41,8 @@ const SignInScreen = () => {
         <div className="SignInContainer">
             <div className="centerBox">
                <HeaderText fontSize={64} lineHeight={80}>WeCode</HeaderText>
-               <DefaultInput value={email} placeholder="Email" onChange={(text) => setEmail(text)} style={{marginTop: 117}}/>
+               <DefaultText fontSize={24} style={{marginTop: 100, color: 'red', height: 30}}>{isErrorMessageVisible ? 'Wrong password or email': ''}</DefaultText>
+               <DefaultInput value={email} placeholder="Email" onChange={(text) => setEmail(text)} style={{marginTop: 25}}/>
                <DefaultInput value={password} placeholder="Password" type="password" onChange={(text) => setPassword(text)} style={{marginTop: 35}}/>
                <DefaultButton border="none"    
                     onClick={onSignIn}

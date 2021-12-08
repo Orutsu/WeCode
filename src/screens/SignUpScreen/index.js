@@ -11,7 +11,7 @@ import DefaultText from "../../components/DefaultText"
 import { useTypedSelector } from "../../redux/store.ts";
 import { signUp, getUsers} from "../../services/UserService";
 import {useDispatch} from 'react-redux'
-import { setIsAuth, setUser } from "../../redux/auth";
+import { setIsAdmin, setIsAuth, setUser } from "../../redux/auth";
 
 
 
@@ -30,6 +30,7 @@ const SignUpScreen = () => {
             console.log('userInfo', userInfo);
             dispatch(setIsAuth(true))
             dispatch(setUser(userInfo))
+            dispatch(setIsAdmin(userInfo.roleId !== 1))
             navigate('/moduleselection', { replace: true })
 
         }catch(ex)
