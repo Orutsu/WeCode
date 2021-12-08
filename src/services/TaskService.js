@@ -104,7 +104,8 @@ export const submitTask = async (userId, taskId, codeBlocks) => {
 const getScore = async (taskId, codeBlocks) => {
     const expectedResults = await getExpectedResultsOfTask(taskId);
     console.log('expectedResults', expectedResults);
-
+    expectedResults.sort(compare);
+    console.log('expectedResultssorted', expectedResults);
     let correctBlocks = 0;
     expectedResults.forEach((expectedResult, i) => {
         if(expectedResult.codeBlockId === codeBlocks[i]?.id){
@@ -114,3 +115,11 @@ const getScore = async (taskId, codeBlocks) => {
 
     return parseInt(correctBlocks * 100.0 / expectedResults.length) ;
 }
+
+const compare = (a,b) => {
+    if (a.order < b.order)
+       return -1;
+    if (a.order > b.order)
+      return 1;
+    return 0;
+  }
