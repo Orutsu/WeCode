@@ -7,7 +7,7 @@ import {
 } from "react-router-dom";
 import WebFont from 'webfontloader';
 import { useTypedSelector } from "./redux/store";
-
+import CompletedTaskScreen from "./screens/CompletedTask";
 import SignInScreen from "./screens/SignInScreen";
 import SignUpScreen from "./screens/SignUpScreen";
 import ModuleSelectionScreen from "./screens/ModuleSelectionScreen";
@@ -35,6 +35,7 @@ export default function App() {
           <Route path="/taskslist" element={<TasksListScreen />}/>
           <Route path="/usercabinet" element={<UserCabinetScreen />}/>
           <Route path="/completingtask" element={<CompletingTaskScreen />}/>
+          <Route path="/completedtask" element={<CompletedTaskScreen />}/>
           <Route path="/createtask" element={<CreateTaskScreen />}/>
           <Route path="/" element={<RedirectingHandler />} />
         </Routes >

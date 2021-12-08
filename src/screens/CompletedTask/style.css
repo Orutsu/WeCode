@@ -1,0 +1,18 @@
+.CompletedTaskScreen {
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+}
+
+
+.Block {
+    color: inherit;
+    text-decoration: inherit;
+    display: flex;
+    background-color: #EDE7D7;
+    
+    border-radius: 16px;
+    box-shadow: 0 3px 10px rgb(0 0 0 / 0.2);
+}

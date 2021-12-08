@@ -7,7 +7,7 @@ import DefaultInput from '../../components/DefaultInput'
 import DefaultButton from '../../components/DefaultButton'
 import { Link, useNavigate } from 'react-router-dom';
 import { useDispatch } from "react-redux";
-import { resetAuthState, setUser } from "../../redux/auth";
+import { resetAuthState, setUser, setTaskResultIdToWatch } from "../../redux/auth";
 import { changeUserData, getUserStat, getAdminStat } from "../../services/UserService";
 import { useTypedSelector } from "../../redux/store.ts";
 import { getUserCreatedTasks, getUserCompletedTasks, getTask, getAllTasks, updateTask } from "../../services/TaskService";
@@ -22,8 +22,7 @@ const UserCabinetScreen = () => {
     const [createdTasks, setCreatedtasks] = useState([]);
     const [completedTasks, setCompletedTasks] = useState([]);
     const [userStat, setUserStat] = useState({})
-    
-  
+
     const getUserStatistics = async () => {
         let userStatTemp = {}
         if (isAdmin) {
@@ -49,7 +48,7 @@ const UserCabinetScreen = () => {
 
         const uniqueCompletedTasks = (userCompletedTasks).map((completedTask) => {
             const task = allTasks.find((task) => task.taskId === completedTask.taskId);
-            return {name: task?.title, score: completedTask.score};
+            return {resultId: completedTask.taskResultId, name: task?.title, score: completedTask.score};
         });
 
         setCompletedTasks(uniqueCompletedTasks);
@@ -61,12 +60,17 @@ const UserCabinetScreen = () => {
         navigate('/signin', { replace: true })
     }
 
-    const CompletedTask = ({name, score}) => {
+    function onCompletedTask(resultId){
+        dispatch(setTaskResultIdToWatch(resultId))
+        navigate('/completedtask', { replace: true })
+    }
+
+    const CompletedTask = ({resultId, name, score}) => {
         return (
-            <Link className="CompletedTask"  to= '/completingtask' style={{padding: 10, marginBottom: 20}}>          
+            <div className="CompletedTask"  onClick={() => onCompletedTask(resultId)} style={{padding: 10, marginBottom: 20}}>          
                 <HeaderText fontSize={28} style={{paddingRight: 20, width: "70%", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis"}}>{name}</HeaderText>
                 <DefaultText fontSize={18} style={{paddingTop: 10}}>Score: {score}</DefaultText>
-            </Link>
+            </div>
         )
     };
 
@@ -82,7 +86,7 @@ const UserCabinetScreen = () => {
 
     const listItems = isAdmin
         ? createdTasks.map((task) => <CreatedTask  name={task.name}  description={task.description} complexity={task.complexity} />)
-        : completedTasks.map((task) => <CompletedTask  name={task.name}  score={task.score} />);
+        : completedTasks.map((task) => <CompletedTask  resultId={task.resultId} name={task.name}  score={task.score} />);
 
     const onChangeUserData = async () => {
         try{
