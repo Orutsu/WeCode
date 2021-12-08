@@ -17,7 +17,7 @@ const CompletingTaskScreen = ({taskId}) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
     useEffect(async () => {
         //taskid
-        const taskInfoWIthCodeBlocks = await getTaskWithCodeBlocks(18);
+        const taskInfoWIthCodeBlocks = await getTaskWithCodeBlocks(taskIdToComplete);
         console.log('task in CompletingTaskScreen', taskInfoWIthCodeBlocks);
         const codeBlocks = await getAllCodeBlocks();
         console.log('codeBlocks', codeBlocks);
@@ -31,6 +31,7 @@ const CompletingTaskScreen = ({taskId}) => {
                  return {id : expectedResult.codeBlockId, text : (codeBlocks.find(block => block.codeBlockId === expectedResult.codeBlockId)).code};
                 })
         };
+        console.log('taskInfoMapped', taskInfoMapped);
 
         setTaskInfo(taskInfoMapped);
         setBlocksAvailableArray(taskInfo.blocks);
