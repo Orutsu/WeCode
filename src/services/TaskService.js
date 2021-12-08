@@ -22,6 +22,7 @@ export const getUserCompletedTasks = async (userId) => {
 
 export const getUserCreatedTasks = async (userId) => {
     const tasks = await getAllTasks();
+    console.log(userId, tasks)
     return tasks.filter((task) => task.createdBy == userId);
 }
 

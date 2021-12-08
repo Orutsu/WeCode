@@ -34,7 +34,7 @@ const CreateTaskScreen = () => {
   const onSubmitClick = () => {
     const codeBlockString = addedBlocks.map(a => a.value);
     console.log(user.userId, taskNameText, descriptionText, complexityText, codeBlockString, rightSequenceText);
-    createTask(user.userId, taskNameText, descriptionText, complexityText, codeBlockString, rightSequenceText);
+    createTask(user.userId, taskNameText, descriptionText, parseInt(complexityText), codeBlockString, rightSequenceText);
     navigate('/moduleselection', { replace: false })
   }
 
