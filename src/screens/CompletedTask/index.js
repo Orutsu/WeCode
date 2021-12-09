@@ -6,7 +6,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import './style.css';
 import { FaPlus, FaMinus } from 'react-icons/fa';
 import {DragDropContext, Droppable, Draggable} from 'react-beautiful-dnd';
-import { getAllCodeBlocks, getCodeBlock, getTaskWithCodeBlocks, submitTask } from "../../services/TaskService";
+import { getAllCodeBlocks, getCodeBlock, getTaskResult, getTaskWithCodeBlocks, submitTask } from "../../services/TaskService";
 import DefaultButton from '../../components/DefaultButton'
 import { useTypedSelector } from "../../redux/store";
 
@@ -19,27 +19,26 @@ const CompletedTaskScreen = () => {
     const [blocksArray, setBlocksArray] = useState([])
 
 
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     useEffect(async () => {
-        // TODO: Change to get task  & task result ( from taskResultIdToWatch)
-        const taskInfoWIthCodeBlocks = await getTaskWithCodeBlocks(20);
+        const taskResulInfoWithActualResults = await getTaskResult(taskResultIdToWatch);
         const codeBlocks = await getAllCodeBlocks();
 
-        const taskInfoMapped = {
-            name : taskInfoWIthCodeBlocks.task.title, 
-            description : taskInfoWIthCodeBlocks.task.description,
-            complexity : taskInfoWIthCodeBlocks.task.difficulty,
-            score: 80,
-            blocks: taskInfoWIthCodeBlocks.expectedResults?.map((expectedResult) => {
-                 return {id : expectedResult.codeBlockId, text : (codeBlocks.find(block => block.codeBlockId === expectedResult.codeBlockId)).code};
+        const taskResultMapped = {
+            name : taskResulInfoWithActualResults.task.title, 
+            description : taskResulInfoWithActualResults.task.description,
+            complexity : taskResulInfoWithActualResults.task.difficulty,
+            score: taskResulInfoWithActualResults.taskResult.score,
+            blocks: taskResulInfoWithActualResults.actualResults?.map((actualResult) => {
+                 return {id : actualResult.codeBlockId, text : (codeBlocks.find(block => block.codeBlockId === actualResult.codeBlockId)).code};
                 })
         };
 
-        setTaskInfo(taskInfoMapped);
+        setTaskInfo(taskResultMapped);
         console.log('taskInfo', taskInfo);
     
-        setBlocksArray(taskInfoMapped.blocks);
-        console.log('setBlocksArray', setBlocksArray);
-
+        setBlocksArray(taskResultMapped.blocks);
+        console.log('setBlocksArray', blocksArray);
       }, []);
 
 
