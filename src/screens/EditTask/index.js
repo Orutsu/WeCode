@@ -58,8 +58,9 @@ const EditTaskScreen = () => {
     const Block = ({block, index}) => {
         return (
             <div   className="Block" style={{ width: '100%', padding: 10, marginBottom: 20, display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}> 
-            <DefaultText  fontSize={28} style = {{ width: 30, textAlign: 'center', userSelect: "none",  whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis"}}>{index + 1}</DefaultText>         
-            <DefaultText  fontSize={28} style = {{ textAlign: 'center', userSelect: "none", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis"}}>{block.text}</DefaultText>
+                <DefaultText  fontSize={28} style = {{ width: 30, textAlign: 'center', userSelect: "none",  whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis"}}>{index + 1}</DefaultText>         
+                <DefaultText  fontSize={28} style = {{ textAlign: 'center', userSelect: "none", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis"}}>{block.text}</DefaultText>
+                <p></p>
             </div>
         )
     };

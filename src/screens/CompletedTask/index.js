@@ -45,7 +45,7 @@ const CompletedTaskScreen = () => {
 
     const Block = ({block}) => {
         return (
-            <div  className="Block"  style={{ width: '100%', paddingTop: 10, paddingBottom: 10, marginBottom: 20, alignItems: "center"}}>          
+            <div  className="Block"  style={{ width: '85%', paddingTop: 10, paddingBottom: 10, marginBottom: 20, alignItems: "center"}}>          
                 <DefaultText  fontSize={28} style = {{ textAlign: 'center', userSelect: "none", width: '90%'}}>{block.text}</DefaultText>
             </div>
         )
