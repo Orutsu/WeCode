@@ -8,7 +8,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { FaPlusSquare } from 'react-icons/fa';
 import { useTypedSelector } from "../../redux/store";
 import { getAllTasks, getUserCreatedTasks } from "../../services/TaskService";
-import { setTaskIdToComplete } from "../../redux/auth";
+import { setTaskIdToComplete, setTaskIdToEdit } from "../../redux/auth";
 
 const TasksListScreen = () => {
     const {user, isAdmin} = useTypedSelector((store) => store.auth)
@@ -19,11 +19,7 @@ const TasksListScreen = () => {
 
     const onTaskCardClick = (taskId) => {
         dispatch(setTaskIdToComplete(taskId))
-        if (!isAdmin) {
-            navigate('/completingtask', { replace: false })
-        } else {
-            // edit task screen
-        }
+        navigate('/completingtask', { replace: false })
     }
 
     const getTask = async () => {
@@ -42,27 +38,22 @@ const TasksListScreen = () => {
         getTask()
     }, [])
 
-    const onAddNewTaskClick = () => {
-        navigate('/createtask', { replace: false })
-    }
 
-    const onEditTaskClick = (e) => {
+    const onEditTaskClick = (e, taskId) => {
         e.stopPropagation();
-        console.log('Edit') 
+        dispatch(setTaskIdToEdit(taskId))
+        navigate('/edittask', { replace: false })
     }
     
-    const TaskCard = ({id, name, description, complexity, score}) => {
-        let descriptionWidth = isAdmin? "65%" : "50%";
+    const TaskCard = ({id, name, description, complexity}) => {
+        let descriptionWidth = isAdmin? "65%" : "60%";
         return (
             <div className="TaskCard" onClick={() => onTaskCardClick(id)} style={{padding: 20, paddingTop: 30, marginBottom: 20}}>          
                 <HeaderText fontSize={36} style={{paddingRight: 20, width: "25%", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis"}}>{name}</HeaderText>
                 <DefaultText fontSize={18} style={{paddingRight: 50, paddingTop: 15, width: descriptionWidth,  whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis"}}>{description}</DefaultText>
                 {isAdmin 
-                    ? <div onClick={onEditTaskClick}><HeaderText fontSize={18} style={{paddingTop: 15}} >Edit</HeaderText></div> // How to press something in link??? Move edit somewhere outside link
+                    ? <div onClick={(e) => {onEditTaskClick(e, id)}}><HeaderText fontSize={18} style={{paddingTop: 15}} >Edit</HeaderText></div> // How to press something in link??? Move edit somewhere outside link
                     : <DefaultText fontSize={18} style={{paddingTop: 15}}>Complexity: {complexity}</DefaultText>
-                }
-                {!isAdmin && 
-                    <DefaultText fontSize={18} style={{paddingLeft: 25, paddingTop: 15}}>Score: {score}</DefaultText>
                 }
             </div>
         )

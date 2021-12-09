@@ -2,6 +2,7 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 export type AuthState = {
   taskIdToComplete: Number,
+  taskIdToEdit: Number,
   taskResultIdToWatch: Number,
   isAuth: boolean;
   isAdmin: boolean;
@@ -10,6 +11,7 @@ export type AuthState = {
 
 const initialState: AuthState = {
     taskIdToComplete: 0,
+    taskIdToEdit: 0,
     taskResultIdToWatch: 0,
     isAuth: false,
     isAdmin: false,
@@ -20,6 +22,10 @@ const authSlice = createSlice({
   name: 'auth',
   initialState,
   reducers: {
+    setTaskIdToEdit(state, action: PayloadAction<number>) {
+        state.taskIdToEdit = action.payload;
+        return state;
+      },
     setTaskResultIdToWatch(state, action: PayloadAction<number>) {
       state.taskResultIdToWatch = action.payload;
       return state;

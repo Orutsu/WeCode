@@ -21,20 +21,18 @@ const CreateTaskScreen = () => {
   const [taskNameText, setTaskNameText] = useState('')
   const [descriptionText, setDescriptionText] = useState('')
   const [complexityText, setComplexityText] = useState('')
-  const [rightSequenceText, setRightSequenceText] = useState('')
 
   const isSumbitButtonPressable = useMemo(() => {
-    if (taskNameText === '' || descriptionText === '' || complexityText === '' || rightSequenceText === '' || addedBlocks.length === 0) {
+    if (taskNameText === '' || descriptionText === '' || complexityText === '' || addedBlocks.length === 0) {
       return false 
     } else {
       return true
     }
-  }, [taskNameText, descriptionText, complexityText, rightSequenceText, addedBlocks])
+  }, [taskNameText, descriptionText, complexityText, addedBlocks])
 
   const onSubmitClick = () => {
     const codeBlockString = addedBlocks.map(a => a.value);
-    console.log(user.userId, taskNameText, descriptionText, complexityText, codeBlockString, rightSequenceText);
-    createTask(user.userId, taskNameText, descriptionText, parseInt(complexityText), codeBlockString, rightSequenceText);
+    createTask(user.userId, taskNameText, descriptionText, parseInt(complexityText), codeBlockString, "");
     navigate('/moduleselection', { replace: false })
   }
 
@@ -95,8 +93,14 @@ const CreateTaskScreen = () => {
           <DefaultInput value={taskNameText} placeholder="Name" onChange={(text) => setTaskNameText(text)} style={{marginTop: 10, width: 450}}/>
           <DefaultInput value={descriptionText} placeholder="Description" isMultiline onChange={(text) => setDescriptionText(text)} style={{marginTop:25, height: 400}}/>
           <DefaultInput value={complexityText} placeholder="Complexity"  onChange={(text) => onSetComplexityText(text)} style={{marginTop:25}}/>
+          <DefaultButton 
+              border="none"    
+              onClick={isSumbitButtonPressable ? onSubmitClick : null}
+              value="Submit"
+              style={{marginTop: 50, opacity: isSumbitButtonPressable ? 1 : 0.5}}
+          />
         </div>
-        <div style={{minHeight: 500, paddingLeft: 25,paddingRight: 25,  width: 500}}>
+        <div style={{minHeight: 500, paddingLeft: 100,paddingRight: 25,  width: 500}}>
           <HeaderText fontSize={48} style={{userSelect: "none"}}>Blocks</HeaderText>
           <div style = {{border: '10px solid #EDE7D7', borderRadius: 16, paddingTop: 20, display: 'flex', flex: 1, justifyContent:'center'}}>
             <DragDropContext  onDragEnd={handleOnDragEnd}>
@@ -135,23 +139,6 @@ const CreateTaskScreen = () => {
                 <img src={PlusIcon} alt={"Plus Icon"}/>
               </div>
             </div>      
-        </div>
-        <div className="column">
-          <HeaderText fontSize={48}>Right Sequence</HeaderText>
-          <DefaultInput value={rightSequenceText} placeholder="2, 3 ...." onChange={(text) => setRightSequenceText(text)} style={{marginTop: 10, width: 450}}/>
-          <DefaultText fontSize={24} style={{width: 450, marginTop: 40}}>
-            Please, write correct sequnce separate by comas which will be a solution for your task.
-            <br/>
-            Example:
-            <br/>
-            1, 2, 3
-          </DefaultText>
-          <DefaultButton 
-              border="none"    
-              onClick={isSumbitButtonPressable ? onSubmitClick : null}
-              value="Submit"
-              style={{marginTop: 50, opacity: isSumbitButtonPressable ? 1 : 0.5}}
-          />
         </div>
       </div>
     </div>

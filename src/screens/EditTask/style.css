@@ -1,4 +1,4 @@
-.createTaskContainer {
+.editTaskContainer {
     width: 100vw;
     height: 100vh;
     display: flex;
@@ -6,7 +6,7 @@
     flex-direction: column;
 }
 
-.pageContainer {
+.taskEditPageContainer {
     display: flex;
     flex: 1;
     padding-top: 25px;

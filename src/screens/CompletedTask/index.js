@@ -52,7 +52,7 @@ const CompletedTaskScreen = () => {
     };   
 
     function onClose() {
-        console.log("Close")
+        navigate('/usercabinet', { replace: false })
     }
 
     return (

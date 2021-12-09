@@ -7,7 +7,7 @@ import DefaultInput from '../../components/DefaultInput'
 import DefaultButton from '../../components/DefaultButton'
 import { Link, useNavigate } from 'react-router-dom';
 import { useDispatch } from "react-redux";
-import { resetAuthState, setUser, setTaskResultIdToWatch } from "../../redux/auth";
+import { resetAuthState, setUser, setTaskResultIdToWatch, setTaskIdToEdit } from "../../redux/auth";
 import { changeUserData, getUserStat, getAdminStat } from "../../services/UserService";
 import { useTypedSelector } from "../../redux/store.ts";
 import { getUserCreatedTasks, getUserCompletedTasks, getTask, getAllTasks, updateTask } from "../../services/TaskService";
@@ -39,7 +39,7 @@ const UserCabinetScreen = () => {
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
     useEffect(async () => {
-        const createdTasks = (await getUserCreatedTasks(user.userId)).map(task => ({name: task.title, description: task.description, complexity: task.difficulty}));
+        const createdTasks = (await getUserCreatedTasks(user.userId)).map(task => ({id: task.taskId, name: task.title, description: task.description, complexity: task.difficulty}));
         console.log('createdTasks', createdTasks);
         setCreatedtasks(createdTasks);
         getUserStatistics()
@@ -65,6 +65,11 @@ const UserCabinetScreen = () => {
         navigate('/completedtask', { replace: true })
     }
 
+    function onCreatedTask(taskId){
+        dispatch(setTaskIdToEdit(taskId))
+        navigate('/edittask', { replace: false })
+    }
+
     const CompletedTask = ({resultId, name, score}) => {
         return (
             <div className="CompletedTask"  onClick={() => onCompletedTask(resultId)} style={{padding: 10, marginBottom: 20}}>          
@@ -74,18 +79,18 @@ const UserCabinetScreen = () => {
         )
     };
 
-    const CreatedTask = ({name, description, complexity}) => {
+    const CreatedTask = ({id, name, description, complexity}) => {
         return (
-            <Link className="CompletedTask" to= '/editingtask' style={{padding: 10, marginBottom: 20}}>          
+            <div className="CompletedTask" onClick={() => onCreatedTask(id)} style={{padding: 10, marginBottom: 20}}>          
                 <HeaderText fontSize={28} style={{paddingRight: 20, width: "25%", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis"}}>{name}</HeaderText>
                 <DefaultText fontSize={18} style={{paddingRight: 20, paddingTop: 10, width: "55%",  whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis"}}>{description}</DefaultText>
                 <DefaultText fontSize={18} style={{paddingTop: 10}}>Complexity: {complexity}</DefaultText>
-            </Link>
+            </div>
         )
     };
 
     const listItems = isAdmin
-        ? createdTasks.map((task) => <CreatedTask  name={task.name}  description={task.description} complexity={task.complexity} />)
+        ? createdTasks.map((task) => <CreatedTask  id={task.id} name={task.name}  description={task.description} complexity={task.complexity} />)
         : completedTasks.map((task) => <CompletedTask  resultId={task.resultId} name={task.name}  score={task.score} />);
 
     const onChangeUserData = async () => {
